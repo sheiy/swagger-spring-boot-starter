@@ -2,9 +2,16 @@ package com.github.sofior.swagger;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
+import org.springframework.core.type.AnnotationMetadata;
 import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -22,33 +29,35 @@ import java.util.List;
  */
 @Configuration
 @EnableSwagger2
+@Import(Registrar.class)
 @EnableConfigurationProperties(SwaggerProperties.class)
-public class SwaggerAutoConfiguration {
+public class SwaggerAutoConfiguration  {
 
-    private final SwaggerProperties properties;
+//    private final SwaggerProperties properties;
+//
+//    public SwaggerAutoConfiguration(SwaggerProperties properties) {
+//        this.properties = properties;
+//    }
 
-    public SwaggerAutoConfiguration(SwaggerProperties properties) {
-        this.properties = properties;
-    }
+//    @Bean
+//    public Docket createRestApi() {
+//        List<Predicate<RequestHandler>> packages = new ArrayList<>(properties.getBasePackages().length);
+//        for (String basePackage : properties.getBasePackages()) {
+//            packages.add(RequestHandlerSelectors.basePackage(basePackage));
+//        }
+//        //noinspection unchecked
+//        return new Docket(DocumentationType.SWAGGER_2)
+//                .select()
+//                .apis(Predicates.or(packages.toArray(new Predicate[0])))
+//                .paths(PathSelectors.any())
+//                .build()
+//                .apiInfo(apiInfo());
+//    }
+//
+//    private ApiInfo apiInfo() {
+//        Contact contact = new Contact(properties.getContactName(), properties.getContactUrl(), properties.getContactEmail());
+//        return new ApiInfo(properties.getTitle(), properties.getDescription(), properties.getVersion(), properties.getTermsOfServiceUrl(),
+//                contact, properties.getLicense(), properties.getLicenseUrl(), new ArrayList<>());
+//    }
 
-    @Bean
-    public Docket createRestApi() {
-        List<Predicate<RequestHandler>> packages = new ArrayList<>(properties.getBasePackages().length);
-        for (String basePackage : properties.getBasePackages()) {
-            packages.add(RequestHandlerSelectors.basePackage(basePackage));
-        }
-        //noinspection unchecked
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(Predicates.or(packages.toArray(new Predicate[0])))
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(apiInfo());
-    }
-
-    private ApiInfo apiInfo() {
-        Contact contact = new Contact(properties.getContactName(), properties.getContactUrl(), properties.getContactEmail());
-        return new ApiInfo(properties.getTitle(), properties.getDescription(), properties.getVersion(), properties.getTermsOfServiceUrl(),
-                contact, properties.getLicense(), properties.getLicenseUrl(), new ArrayList<>());
-    }
 }
